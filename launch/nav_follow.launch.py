@@ -44,9 +44,10 @@ def generate_launch_description():
                             {"icp_MaxCorrespondenceDistance"      : 100.0},
                             {"use_sim_time"                       : False},                
                             {"enable_tf"                          : True},
-                            {"enable_vel_feedforward"             : True},
+                            {"enable_vel_feedforward"             : False},
                             {"enable_icp"                         : False}, 
-                            {"cmd_vel_topic_master"               : "/omron/cmd_vel"},
+                            {"cmd_vel_topic_master"               : "/leader_simulation/cmd_vel"},
+                            # {"cmd_vel_topic_master"               : "/omron/cmd_vel"},
                             {"autostart"                          : True},
                             config])]
 

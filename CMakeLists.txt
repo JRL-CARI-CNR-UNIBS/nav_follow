@@ -71,9 +71,16 @@ install(TARGETS ${PROJECT_NAME}_node
   RUNTIME DESTINATION lib/${PROJECT_NAME}
 )
 
+
 install(
   DIRECTORY launch config
   DESTINATION share/${PROJECT_NAME}
+  )
+  
+ament_python_install_package(test)
+install(PROGRAMS
+  test/leader_simulation.py
+  DESTINATION lib/${PROJECT_NAME}
 )
 
 
