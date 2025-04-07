@@ -27,17 +27,6 @@ void nav_follow_class::current_tf_thread()
             _params.frame_name_base_master.c_str(), _params.frame_name_base_slave.c_str(), ex.what());
         }
         // std::this_thread::sleep_for(50ms);
-        // PRINT RELATIVE TF with RCLCPP_INFO
-        RCLCPP_INFO(get_logger(), ""
-                    "Current transformation from %s to %s: %f %f %f %f %f %f",
-                    _params.frame_name_base_master.c_str(),
-                    _params.frame_name_base_slave.c_str(),
-                    _tf_master_slave.transform.translation.x,
-                    _tf_master_slave.transform.translation.y,
-                    _tf_master_slave.transform.translation.z,
-                    _tf_master_slave.transform.rotation.x,
-                    _tf_master_slave.transform.rotation.y,
-                    _tf_master_slave.transform.rotation.z);
         _rate_tf->sleep();
     }
 }
@@ -55,16 +44,10 @@ void nav_follow_class::get_tf_goal()
     _tf_goal_msg = _tf_buffer->lookupTransform(
             _params.frame_name_base_master, _params.frame_name_base_slave,
             tf2::TimePointZero);
-            tf2::fromMsg(_tf_goal_msg, _tf_goal_transform);
-            
+
+    tf2::fromMsg(_tf_goal_msg, _tf_goal_transform);
+
     RCLCPP_INFO(get_logger(), "Initial transformation stored");
-    RCLCPP_INFO(get_logger(), "Initial transform: %f %f %f %f %f %f",
-                    _tf_goal_msg.transform.translation.x,
-                    _tf_goal_msg.transform.translation.y,
-                    _tf_goal_msg.transform.translation.z,
-                    _tf_goal_msg.transform.rotation.x,
-                    _tf_goal_msg.transform.rotation.y,
-                    _tf_goal_msg.transform.rotation.z);
 }
 
 void nav_follow_class::tf_follow_thread()
@@ -81,13 +64,7 @@ void nav_follow_class::tf_follow_thread()
             std::scoped_lock<std::mutex> guard_tf(_tf_mutex);
             tf2::fromMsg(_tf_master_slave, stamped_transform_now);
         }
-        RCLCPP_INFO(get_logger(), "stamped_transform_now : %f %f %f %f %f %f",
-                    stamped_transform_now.getOrigin().getX(),
-                    stamped_transform_now.getOrigin().getY(),
-                    stamped_transform_now.getOrigin().getZ(),
-                    stamped_transform_now.getRotation().getX(),
-                    stamped_transform_now.getRotation().getY(),
-                    stamped_transform_now.getRotation().getZ());
+
         tf2::Transform err =  stamped_transform_now.inverse() * _tf_goal_transform;
 
         x_err = err.getOrigin().getX();
@@ -99,14 +76,14 @@ void nav_follow_class::tf_follow_thread()
         w_err = y;
 
 
-        RCLCPP_INFO_STREAM(get_logger(),"err: " << x_err << " " << y_err << " " << w_err << " " << "\n");
+        // RCLCPP_INFO_STREAM(get_logger(),"err: " << x_err << " " << y_err << " " << w_err << " " << "\n");
         //TODO rate to Duration ?
         auto dt = rclcpp::Duration(50ms);
         x_cmd = _x_pid->computeCommand(x_err,dt);
         y_cmd = _y_pid->computeCommand(y_err,dt);
         w_cmd = _w_pid->computeCommand(w_err,dt);
         
-        RCLCPP_INFO_STREAM(get_logger(),"cmd: " << x_cmd << " " << y_cmd << " " << w_cmd << " " << "\n");
+        // RCLCPP_INFO_STREAM(get_logger(),"cmd: " << x_cmd << " " << y_cmd << " " << w_cmd << " " << "\n");
         {
             std::scoped_lock<std::mutex> guard_tf(_cmd_vel_mutex_tf);
             _cmd_vel_tf_msg.linear.x  = x_cmd;

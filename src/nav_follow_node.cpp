@@ -193,10 +193,6 @@ void nav_follow_class::cmd_vel_thread()
                 msg.linear.x  = _cmd_vel_tf_msg.linear.x  + _cmd_vel_feed_msg.linear.x  + _cmd_vel_icp_msg.linear.x  ;
                 msg.linear.y  = _cmd_vel_tf_msg.linear.y  + _cmd_vel_feed_msg.linear.y  + _cmd_vel_icp_msg.linear.y  ;
                 msg.angular.z = _cmd_vel_tf_msg.angular.z + _cmd_vel_feed_msg.angular.z + _cmd_vel_icp_msg.angular.z ;
-                RCLCPP_INFO(this->get_logger(), "Cmd vel x : %f y: %f w: %f", msg.linear.x, msg.linear.y, msg.angular.z);
-                RCLCPP_INFO(this->get_logger(), "cmd tf msg: %f %f %f", _cmd_vel_tf_msg.linear.x, _cmd_vel_tf_msg.linear.y, _cmd_vel_tf_msg.angular.z);
-                // RCLCPP_INFO(this->get_logger(), "cmd feed msg: %f %f %f", _cmd_vel_feed_msg.linear.x, _cmd_vel_feed_msg.linear.y, _cmd_vel_feed_msg.angular.z);
-                // RCLCPP_INFO(this->get_logger(), "cmd icp msg: %f %f %f", _cmd_vel_icp_msg.linear.x, _cmd_vel_icp_msg.linear.y, _cmd_vel_icp_msg.angular.z);
             }  
             // std::cout << msg.linear.x << std::flush;
             _cmd_vel_pub_rt->unlockAndPublish();
