@@ -52,5 +52,3 @@ def generate_launch_description():
                             config])]
 
     return LaunchDescription(declared_arguments + node1)
-
-    

@@ -48,8 +48,8 @@ class VelocityBasedTFPublisher(Node):
 
         self.get_logger().info("Node for publishing TF based on cmd_vel started!")
 
-        self.leader_frame = 'azrael/base_link'
-        self.follower_frame = 'omron/base_link'
+        self.leader_frame = 'azrael/base_footprint'
+        self.follower_frame = 'omron/base_footprint'
         self.base_frame = 'azrael/odom'
 
 
@@ -132,8 +132,8 @@ class VelocityBasedTFPublisher(Node):
         t = TransformStamped()
         
         t.header.stamp = self.get_clock().now().to_msg()
-        t.header.frame_id = 'azrael/odom'
-        t.child_frame_id = 'omron/base_link'
+        t.header.frame_id = self.base_frame
+        t.child_frame_id = self.follower_frame
         
         # Translation based on integrated position (x, y)
         t.transform.translation.x = self.x
